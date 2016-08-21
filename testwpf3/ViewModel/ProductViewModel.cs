@@ -46,12 +46,22 @@ namespace testwpf3 {
                 NotifyPropertyChanged();
             }
         }
+        public Product SelectedProduct {
+            get {
+                return selectedProduct;
+            }
+            set {
+                this.selectedProduct = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Private Property 
         private ProductRepository repo;
         private Product newProduct;
         private PageableCollection<Product> listProduct;
+        private Product selectedProduct;
         #endregion
 
         #region Contructor
@@ -99,10 +109,11 @@ namespace testwpf3 {
             Helper.Show(ListProduct.CurrentPageNumber);
         }
         private void ExecuteListLastCommand ( object param ) {
+            ListProduct.TotalItemSize = repo.CountProduct();
             ListProduct.GoToLastPage();
             ListProduct.CurrentPageItems = new ObservableCollection<Product>(
                 repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
-            Helper.Show(ListProduct.TotalPagesNumber);
+            Helper.Show(ListProduct.CurrentPageNumber);
         }
 
         private void ExecuteListOnChangedCommand ( object param ) {
@@ -116,7 +127,7 @@ namespace testwpf3 {
         }
         private void ExecuteAddProductCommand ( object param ) {
             repo.AddProductAsync(NewProduct);
-            this.ExecuteFormOnLoadCommand(null);
+            this.ExecuteListLastCommand(param);
         }        
         #endregion
 

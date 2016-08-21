@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace testwpf3.ViewModel.BaseClass {
     class PageableCollection<T> : INotifyPropertyChanged {
@@ -60,7 +61,12 @@ namespace testwpf3.ViewModel.BaseClass {
             }
         }
         public int TotalPagesNumber {
-            get { return (TotalItemSize / pageSize) + 1; }
+            get {
+                if (TotalItemSize % PageSize == 0) {
+                    return TotalItemSize / PageSize;
+                }
+                return (TotalItemSize / PageSize) + 1;
+            }
         }
         public ObservableCollection<T> CurrentPageItems {
             get {

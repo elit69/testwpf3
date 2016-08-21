@@ -15,8 +15,12 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <DataGrid ItemsSource="{Binding ListProduct.CurrentPageItems, Mode=TwoWay}" Margin="0,0,-0.226,69.774" Width="300"/>
+    <Grid Background="LightGray">
+        <DataGrid ItemsSource="{Binding ListProduct.CurrentPageItems, Mode=TwoWay}" 
+                  SelectedItem="{Binding SelectedProduct}"
+                  Margin="0,0,-0.226,69.774"
+                  Width="300"/>
+        
         <Button x:Name="button_Copy" Content="First" HorizontalAlignment="Left" Margin="22,270,0,0" VerticalAlignment="Bottom" Width="56">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">

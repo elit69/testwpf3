@@ -18,8 +18,7 @@
     </Window.DataContext>
 
     <Grid>
-        <local:AddProductView Margin="718,201,97.736,180"/>
-        <local:ListProductView Margin="74,62,601.736,90"/>
-        
+        <local:AddProductView Margin="672,137,353.736,176"/>
+        <local:ListProductView Margin="74,62,830.736,90"/>
     </Grid>
 </Window>
