@@ -1,0 +1,25 @@
+﻿<Window x:Class="testwpf3.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:testwpf3.View"
+        xmlns:localViewModel="clr-namespace:testwpf3"
+        mc:Ignorable="d"
+        
+        Height="768" 
+        Width="1366"
+        WindowStyle="None"   
+        WindowState="Maximized"
+        ResizeMode="NoResize" >
+    
+    <Window.DataContext>
+        <localViewModel:ProductViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <local:AddProductView Margin="718,201,97.736,180"/>
+        <local:ListProductView Margin="74,62,601.736,90"/>
+        
+    </Grid>
+</Window>
