@@ -73,6 +73,11 @@
                   SelectedIndex="0" 
                   ItemsSource="{Binding ListSize}" 
                   SelectedItem="{Binding ListProduct.PageSize}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ListOnChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </ComboBox>
     </Grid>
 </UserControl>

@@ -23,6 +23,7 @@ namespace testwpf3 {
         public ICommand ListNextCommand { private set; get; }
         public ICommand ListPrevCommand { private set; get; }
         public ICommand ListLastCommand { private set; get; }
+        public ICommand ListOnChangedCommand { private set; get; }
         #endregion
 
         #region Public Property for View
@@ -67,6 +68,7 @@ namespace testwpf3 {
             ListNextCommand = new RelayCommand(ExecuteListNextCommand);
             ListPrevCommand = new RelayCommand(ExecuteListPrevCommand);
             ListLastCommand = new RelayCommand(ExecuteListLastCommand);
+            ListOnChangedCommand = new RelayCommand(ExecuteListOnChangedCommand);
         }
         #endregion
 
@@ -80,7 +82,9 @@ namespace testwpf3 {
         }
         private void ExecuteListFirstCommand ( object param ) {
             ListProduct.GoToFirstPage();
-            this.ExecuteFormOnLoadCommand(param);
+            ListProduct.CurrentPageItems = new ObservableCollection<Product>(
+                repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
+            Helper.Show(ListProduct.CurrentPageNumber);
         }
         private void ExecuteListPrevCommand ( object param ) {
             ListProduct.GoToPreviousPage();
@@ -99,6 +103,10 @@ namespace testwpf3 {
             ListProduct.CurrentPageItems = new ObservableCollection<Product>(
                 repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
             Helper.Show(ListProduct.TotalPagesNumber);
+        }
+
+        private void ExecuteListOnChangedCommand ( object param ) {
+            this.ExecuteListFirstCommand(param);
         }
         #endregion
 
