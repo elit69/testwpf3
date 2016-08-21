@@ -24,10 +24,16 @@ namespace testwpf3 {
         public ICommand ListPrevCommand { private set; get; }
         public ICommand ListLastCommand { private set; get; }
         public ICommand ListOnChangedCommand { private set; get; }
+        public ICommand UpdateCommand { private set; get; }
+        public ICommand DeleteCommand { private set; get; }
         #endregion
 
         #region Public Property for View
-        public List<int> ListSize { private set; get; }
+        public List<int> ListSize {
+            get {
+                return new List<int>() { 5, 10, 20 };
+            }
+        }
         public Product NewProduct {
             get {
                 return newProduct;
@@ -68,7 +74,6 @@ namespace testwpf3 {
         public ProductViewModel ( ) {
             repo = new ProductRepository();
             NewProduct = new Product();
-            ListSize = new List<int>() { 5, 10, 20 };
 
             DebugProductCommand = new RelayCommand(ExecuteDebugProductCommand);
             FormOnLoadCommand = new RelayCommand(ExecuteFormOnLoadCommand);
@@ -79,56 +84,71 @@ namespace testwpf3 {
             ListPrevCommand = new RelayCommand(ExecuteListPrevCommand);
             ListLastCommand = new RelayCommand(ExecuteListLastCommand);
             ListOnChangedCommand = new RelayCommand(ExecuteListOnChangedCommand);
+
+            UpdateCommand = new RelayCommand(ExecuteUpdateCommand, CanUpdateCommand);
+            DeleteCommand = new RelayCommand(ExecuteDeleteCommand, CanDeleteCommand);
         }
         #endregion
 
         #region ICommand Pagination
-        private void ExecuteFormOnLoadCommand ( object param ) {
-            int size = ListSize.First();
+        private void ExecuteFormOnLoadCommand () {
             ListProduct = new PageableCollection<Product>(
-                repo.listProductPagination(1, size),
-                size,
+                repo.listProductPagination(1, ListSize.First()),
+                ListSize.First(),
                 repo.CountProduct());
         }
-        private void ExecuteListFirstCommand ( object param ) {
+        private void ExecuteListFirstCommand () {
             ListProduct.GoToFirstPage();
             ListProduct.CurrentPageItems = new ObservableCollection<Product>(
                 repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
-            Helper.Show(ListProduct.CurrentPageNumber);
         }
-        private void ExecuteListPrevCommand ( object param ) {
+        private void ExecuteListPrevCommand () {
             ListProduct.GoToPreviousPage();
             ListProduct.CurrentPageItems = new ObservableCollection<Product>(
                 repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
-            Helper.Show(ListProduct.CurrentPageNumber);
         }
-        private void ExecuteListNextCommand ( object param ) {
+        private void ExecuteListNextCommand () {
             ListProduct.GoToNextPage();
             ListProduct.CurrentPageItems = new ObservableCollection<Product>(
                 repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
-            Helper.Show(ListProduct.CurrentPageNumber);
         }
-        private void ExecuteListLastCommand ( object param ) {
+        private void ExecuteListLastCommand () {
             ListProduct.TotalItemSize = repo.CountProduct();
             ListProduct.GoToLastPage();
             ListProduct.CurrentPageItems = new ObservableCollection<Product>(
                 repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
-            Helper.Show(ListProduct.CurrentPageNumber);
         }
 
-        private void ExecuteListOnChangedCommand ( object param ) {
-            this.ExecuteListFirstCommand(param);
+        private void ExecuteListOnChangedCommand () {
+            this.ExecuteListFirstCommand();
         }
         #endregion
 
         #region ICommand Method
-        private void ExecuteDebugProductCommand ( object param ) {
+        private void ExecuteDebugProductCommand () {
             repo.listProductPagination(1, 1);
         }
-        private void ExecuteAddProductCommand ( object param ) {
-            repo.AddProductAsync(NewProduct);
-            this.ExecuteListLastCommand(param);
-        }        
+        private void ExecuteAddProductCommand () {
+            repo.AddProduct(NewProduct);
+            NewProduct = new Product();
+            this.ExecuteListLastCommand();
+        }
+
+        private Boolean CanUpdateCommand() {
+            return SelectedProduct != null;
+        }
+        private void ExecuteUpdateCommand () {
+            repo.UpdateProduct(SelectedProduct);
+        }
+
+        private Boolean CanDeleteCommand ( ) {
+            return SelectedProduct != null;
+        }
+        private void ExecuteDeleteCommand () {
+            repo.DeleteProdudct(SelectedProduct.id);
+            ListProduct.CurrentPageItems = new ObservableCollection<Product>(
+               repo.listProductPagination(ListProduct.CurrentPageNumber, ListProduct.PageSize));
+        }
         #endregion
 
         #region INotifyPropertyChanged

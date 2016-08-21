@@ -9,24 +9,13 @@ using System.Threading.Tasks;
 using testwpf3.Model;
 
 namespace testwpf3.Repository {
+
     class ProductRepository : IProductRepository {
 
-        public void AddProductAsync ( Product product ) {
+        public void AddProduct ( Product product ) {
             using (var db = new ModelContext()) {
                 db.Products.Add(product);
                 db.SaveChanges();
-            }
-        }
-
-        public int CountProduct ( ) {
-            using (var db = new ModelContext()) {
-                return db.Products.Count();
-            }
-        }
-
-        public List<Product> listProduct ( ) {
-            using (var db = new ModelContext()) {
-                return db.Products.ToList();
             }
         }
 
@@ -37,6 +26,31 @@ namespace testwpf3.Repository {
                      .Skip(limit * (page - 1))
                      .Take(limit)
                      .ToList();
+            }
+        }
+
+        public int CountProduct ( ) {
+            using (var db = new ModelContext()) {
+                return db.Products.Count();
+            }
+        }
+
+
+
+        public void UpdateProduct ( Product product ) {
+            using (var context = new ModelContext()) {
+                context.Products.Attach(product);
+                context.Entry(product).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteProdudct ( int id1 ) {
+            using (var context = new ModelContext()) {
+                var product = new Product { id = id1 };
+                context.Products.Attach(product);
+                context.Products.Remove(product);
+                context.SaveChanges();
             }
         }
     }

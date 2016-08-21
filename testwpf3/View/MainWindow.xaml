@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:testwpf3.View"
         xmlns:localViewModel="clr-namespace:testwpf3"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         
         Height="768" 
@@ -12,13 +13,179 @@
         WindowStyle="None"   
         WindowState="Maximized"
         ResizeMode="NoResize" >
-    
+
     <Window.DataContext>
         <localViewModel:ProductViewModel/>
     </Window.DataContext>
 
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction  Command="{Binding FormOnLoadCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
-        <local:AddProductView Margin="672,137,353.736,176"/>
-        <local:ListProductView Margin="74,62,830.736,90"/>
+        <!--==========================================================list product-->
+        <DataGrid ItemsSource="{Binding ListProduct.CurrentPageItems, Mode=TwoWay}" 
+                  SelectedItem="{Binding SelectedProduct}"
+                  Margin="83,62,820.736,135"/>
+
+        <Button x:Name="button_Copy" Content="First" HorizontalAlignment="Left" Margin="129,0,0,51" VerticalAlignment="Bottom" Width="56">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction  Command="{Binding ListFirstCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button x:Name="button_Copy1" 
+                Content="Previous" 
+                HorizontalAlignment="Left" 
+                Margin="190,0,0,51" 
+                VerticalAlignment="Bottom" 
+                Width="56" 
+                RenderTransformOrigin="0.946,1.171">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction  Command="{Binding ListPrevCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button x:Name="button_Copy2" 
+                Content="Next" 
+                HorizontalAlignment="Left" 
+                Margin="257,0,0,51" 
+                VerticalAlignment="Bottom" 
+                Width="56">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction  Command="{Binding ListNextCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button x:Name="button_Copy3" 
+                Content="Last" 
+                HorizontalAlignment="Left" 
+                Margin="326,0,0,51" 
+                VerticalAlignment="Bottom" 
+                Width="56" 
+                RenderTransformOrigin="0.946,1.171">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding ListLastCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+
+
+        <ComboBox x:Name="comboBox" 
+                  HorizontalAlignment="Left" 
+                  Margin="203,0,0,90" 
+                  VerticalAlignment="Bottom" 
+                  Width="120"   
+                  SelectedIndex="0" 
+                  ItemsSource="{Binding ListSize}" 
+                  SelectedItem="{Binding ListProduct.PageSize}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ListOnChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ComboBox>
+
+
+        <!--==========================================================add product-->
+        <TextBox x:Name="textBox" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="880,62,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding NewProduct.firstName}" 
+                 VerticalAlignment="Top" 
+                 Width="120"/>
+        <TextBox x:Name="textBox_Copy" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="881,106,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding NewProduct.lastName}" 
+                 VerticalAlignment="Top"
+                 Width="120"/>
+        <Button x:Name="button" 
+                Content="Show"
+                HorizontalAlignment="Left" 
+                Margin="839,178,0,0" 
+                VerticalAlignment="Top" 
+                Width="75">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click" >
+                    <i:InvokeCommandAction Command="{Binding DebugProductCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button x:Name="button1" 
+                Content="Add"
+                HorizontalAlignment="Left" 
+                Margin="944,178,0,0" 
+                VerticalAlignment="Top" 
+                Width="75">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click" >
+                    <i:InvokeCommandAction Command="{Binding AddProductCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+        <!--==========================================================View product-->
+        <TextBox x:Name="textBosx" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="840,357,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding SelectedProduct.id}" 
+                 VerticalAlignment="Top" 
+                 Width="120"
+                 IsReadOnly="True"/>
+        <TextBox x:Name="textBsox" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="840,413,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding SelectedProduct.firstName}" 
+                 VerticalAlignment="Top" 
+                 Width="120"/>
+        <TextBox x:Name="textBoxs_Copy" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="840,463,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding SelectedProduct.lastName}" 
+                 VerticalAlignment="Top"
+                 Width="120"/>
+        <Button x:Name="buttsson" 
+                Content="Update"
+                HorizontalAlignment="Left" 
+                Margin="837,519,0,0" 
+                VerticalAlignment="Top" 
+                Width="75">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click" >
+                    <i:InvokeCommandAction Command="{Binding UpdateCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button x:Name="bsutton1" 
+                Content="Delete"
+                HorizontalAlignment="Left" 
+                Margin="925,519,0,0" 
+                VerticalAlignment="Top" 
+                Width="75">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click" >
+                    <i:InvokeCommandAction Command="{Binding DeleteCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
     </Grid>
 </Window>

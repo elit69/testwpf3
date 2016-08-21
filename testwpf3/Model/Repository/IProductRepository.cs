@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace testwpf3.Repository {
     interface IProductRepository {
-        void AddProductAsync ( Product product );
-        List<Product> listProduct ( );
+        void AddProduct ( Product product );
         List<Product> listProductPagination (int page, int limit );
         int CountProduct ( );
+
+        void UpdateProduct ( Product product);
+        void DeleteProdudct ( int id );
     }
 }

@@ -6,65 +6,42 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace testwpf3 {
-      public class RelayCommand : ICommand
-    {
-        #region Fields
+    class RelayCommand : ICommand {
+        private Action targetMethodExecute;
+        private Func<bool> targetMethodCanExecute;
 
-        private readonly Action<object> _execute;
-        private readonly Predicate<object> _canExecute;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Creates a new command that can always execute.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Action<object> execute)
-            : this(execute, null)
-        {
+        public RelayCommand ( Action executeMethod ) {
+            this.targetMethodExecute = executeMethod;
+        }
+        public RelayCommand ( Action executeMethod, Func<bool> canExecuteMethod ) {
+            this.targetMethodExecute = executeMethod;
+            this.targetMethodCanExecute = canExecuteMethod;
         }
 
-        /// <summary>
-        /// Creates a new command.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute, string tooltip = null)
-        {
-            if (execute == null)
-            {
-                throw new ArgumentNullException("execute");
+        public void RaiseCanExecuteChanged ( ) {
+            CanExecuteChanged(this, EventArgs.Empty);
+        }
+
+
+        public event EventHandler CanExecuteChanged;
+
+
+        public bool CanExecute ( object parameter ) {
+            if (targetMethodCanExecute != null) {
+                return targetMethodCanExecute();
             }
 
-            _execute = execute;
-            _canExecute = canExecute;
-            ToolTip = tooltip;
+            if (targetMethodExecute != null) {
+                return true;
+            }
+
+            return false;
         }
 
-        #endregion
-
-        #region ICommand Members
-
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute == null ? true : _canExecute(parameter);
+        public void Execute ( object parameter ) {
+            if (targetMethodExecute != null) {
+                targetMethodExecute();
+            }
         }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute(parameter);
-        }
-
-        public string ToolTip { get; set; }
-
-        #endregion
     }
 }
